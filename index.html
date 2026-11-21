@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Chuyển khoản · LaiQR</title>
+  <meta name="description" content="Tạo mã VietQR chuyển khoản đến tài khoản VietinBank của Lai.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar wrap">
+    <a class="brand" href="index.html" aria-label="LaiQR, trang chuyển khoản"><span class="brand-mark">L<span class="brand-dot">.</span></span><span>LaiQR</span></a>
+    <nav class="site-links" aria-label="Liên kết Lai">
+      <a href="https://lai.id.vn/">Thông tin về Lai</a>
+      <a href="https://support.lai.id.vn/">Hỗ trợ</a>
+      <a href="https://apps.lai.id.vn/">Sản phẩm</a>
+    </nav>
+    <button class="theme-button" type="button" data-theme-toggle aria-label="Đổi giao diện sáng tối" title="Đổi giao diện sáng tối"><span aria-hidden="true">◐</span></button>
+  </header>
+
+  <main class="wrap payment-layout">
+    <section class="payment-card" aria-label="Thông tin chuyển khoản">
+      <div class="card-heading"><div><span class="overline">THÔNG TIN THANH TOÁN</span><h2>Tạo mã chuyển khoản</h2></div><span class="secure-tag">VietQR</span></div>
+      <div class="payment-fields">
+        <span class="field-label">Ngân hàng nhận</span>
+        <div class="pinned-bank"><img class="bank-logo" src="assets/vietinbank.png" alt="" width="44" height="44"><strong>VietinBank</strong><span class="pinned-tag">Đã ghim</span></div>
+        <div class="recipient">
+          <div><span class="field-caption">SỐ TÀI KHOẢN</span><div class="account-line"><strong id="account-number"></strong><button id="copy-account" class="text-button" type="button" aria-label="Sao chép số tài khoản">Sao chép</button></div></div>
+          <div><span class="field-caption">CHỦ TÀI KHOẢN</span><strong id="account-holder" class="holder"></strong></div>
+        </div>
+        <label class="field-label" for="amount">Số tiền</label>
+        <div class="input-unit"><input id="amount" type="text" inputmode="numeric" autocomplete="off" placeholder="Nhập số tiền" aria-describedby="amount-error" required><span>VND</span></div>
+        <div class="quick-amounts" aria-label="Chọn nhanh số tiền"><button type="button" data-amount="50000">50.000đ</button><button type="button" data-amount="100000">100.000đ</button><button type="button" data-amount="200000">200.000đ</button><button type="button" data-amount="500000">500.000đ</button></div>
+        <p id="amount-error" class="field-error" aria-live="polite"></p>
+        <label class="field-label" for="description">Nội dung chuyển khoản</label>
+        <input id="description" type="text" maxlength="94" autocomplete="off" placeholder="Ví dụ: THANH TOAN DON HANG" aria-describedby="description-help description-error" required>
+        <p id="description-help" class="field-hint">Chữ không dấu, số và khoảng trắng; tối đa 94 ký tự.</p>
+        <p id="description-error" class="field-error" aria-live="polite"></p>
+        <button id="open-qr" class="primary-button" type="button" disabled>Thanh toán</button>
+        <p id="form-status" class="field-hint" aria-live="polite">Vui lòng nhập số tiền và nội dung chuyển khoản.</p>
+      </div>
+    </section>
+  </main>
+  <dialog id="qr-dialog" aria-labelledby="dialog-title">
+    <div class="dialog-heading"><div><span class="overline">VIETQR</span><h2 id="dialog-title">Mã chuyển khoản</h2></div><button id="close-qr" class="close-button" type="button" aria-label="Đóng mã QR">×</button></div>
+    <div class="qr-panel"><div class="qr-image-wrap"><img id="qr-image" alt="Mã VietQR chuyển khoản" width="280" height="280"><div id="qr-placeholder" class="qr-placeholder">Vui lòng nhập số tiền và nội dung chuyển khoản</div></div><p id="qr-status" class="qr-status" aria-live="polite">Vui lòng nhập số tiền và nội dung chuyển khoản</p></div>
+    <p class="dialog-summary">VietinBank · <strong id="summary-amount"></strong><br><span id="summary-description"></span></p>
+    <button id="pay-now" class="primary-button" type="button" aria-controls="bank-picker" aria-expanded="false" disabled>Chuyển khoản ngay <span aria-hidden="true">↗</span></button>
+    <div id="bank-picker" class="bank-picker" role="group" aria-label="Chọn ứng dụng ngân hàng" hidden>
+      <strong>Chọn ứng dụng ngân hàng</strong>
+      <a data-app="icb">VietinBank iPay</a>
+      <a data-app="bidv">BIDV SmartBanking</a>
+      <a data-app="ocb">OCB OMNI</a>
+      <a data-app="acb">ACB ONE</a>
+      <a data-app="mb">MB Bank</a>
+      <a data-app="vba">Agribank Plus <small>Chưa tự điền</small></a>
+      <p>Chọn app để mở ngay. Trên máy tính, VietQR sẽ hiện mã để quét. <a href="https://www.vietqr.io/deeplink/bank-apps">Danh sách hỗ trợ</a>.</p>
+    </div>
+    <a id="download-qr" class="secondary-button" href="#" target="_blank" rel="noopener">Tải mã QR <span aria-hidden="true">↓</span></a>
+    <button id="done-button" class="secondary-button" type="button" aria-controls="completion-message" aria-expanded="false">Đã xong</button>
+    <div id="completion-message" class="completion-message" role="status" hidden><strong>Thành công, bạn có thể tắt trang này.</strong><span>Đây là thông báo giả định; trang không xác minh giao dịch ngân hàng.</span></div>
+  </dialog>
+  <footer class="wrap footer"><span>© LaiQR</span><span>Kiểm tra thông tin người nhận trong ứng dụng ngân hàng trước khi chuyển khoản.</span></footer>
+  <script type="module" src="public.js"></script>
+</body>
+</html>
